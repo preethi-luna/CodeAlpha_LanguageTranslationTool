@@ -29,9 +29,6 @@ def translate():
             return jsonify({"error": "Translation service failed."}), 502
         translated_text = result["responseData"]["translatedText"]
         return jsonify({"translation": translated_text})
-    except requests.RequestException:
-        return jsonify({"error": "Unable to connect to translation service."}), 503
-    except (KeyError, ValueError):
-        return jsonify({"error": "Invalid translation response."}), 502
-if __name__ == "__main__":
-    app.run(debug=True)
+    except requests.RequestException as e:
+    app.logger.exception("Translation API connection failed")
+    return jsonify({"error": "Unable to connect to translation service."}), 503
