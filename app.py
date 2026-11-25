@@ -28,7 +28,11 @@ def translate():
         if result.get("responseStatus") != 200:
             return jsonify({"error": "Translation service failed."}), 502
         translated_text = result["responseData"]["translatedText"]
-        return jsonify({"translation": translated_text})
-    except requests.RequestException as e:
-    app.logger.exception("Translation API connection failed")
-    return jsonify({"error": "Unable to connect to translation service."}), 503
+        return jsonify({"translation": 
+        except requests.RequestException as e:
+            app.logger.exception("Translation API connection failed")
+            return jsonify({"error": "Unable to connect to translation service."}), 503
+
+        except (KeyError, ValueError):
+            return jsonify({"error": "Invalid translation response."}), 502
+
